@@ -22,10 +22,16 @@ It determines that a microphone is listening by checking if any PulseAudio
 
 ### BlinkStick support
 
-i3pamicstatus supports BlinkStick devices. If the `blinkstick` Python module is
-installed, then the first BlinkStick device found will be used, and will light
-up when a microphone is active. i3pamicstatus is tolerant of the BlinkStick
-device appearing or disappearing while it's running.
+i3pamicstatus supports [BlinkStick](https://www.blinkstick.com/) devices.
+
+Note that in order to enable this support, you'll need to manually install the
+[BlinkStick Python module](https://pypi.org/project/BlinkStick/). This module
+is not listed in `requirements.txt`, because it is optional.
+
+If the `blinkstick` Python module is installed, then the first BlinkStick
+device found will be used, and will light up when a microphone is active.
+i3pamicstatus is tolerant of the BlinkStick device appearing or disappearing
+while it's running.
 
 ## Why does this exist?
 
