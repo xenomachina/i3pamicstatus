@@ -76,7 +76,28 @@ LED_COLORS = {
 }
 
 
+def get_status():
+    """
+    Returns the current status
+
+    Result is a sequence of i3status dictionaries representing "blocks" as
+    defined here: https://i3wm.org/docs/i3bar-protocol.html#_blocks_in_detail
+
+    Other side effects based on the status should also be performed here.
+    """
+    value = is_listening()
+    set_led(value)
+    return [OUTPUTS[value]]
+
+
 def read_line():
+    """
+    Reads line of i3status output, returns (prefix, json)
+
+    prefix is a comma or empty string, json is the rest of the line.
+
+    Terminates program if end of input is reached.
+    """
     try:
         line = sys.stdin.readline().strip()
         # i3status sends EOF, or an empty line
@@ -87,23 +108,24 @@ def read_line():
         sys.exit()
 
 
-LINE_RE = re.compile(r'^(,?)(.*)$')
+JSON_LINE_RE = re.compile(r'^(,?)(.*)$')
+
+
+def read_json_line():
+    prefix, line = JSON_LINE_RE.match(read_line()).groups()
+    fields = json.loads(line)
+    return prefix, fields
 
 
 def main():
     print(read_line(), flush=True)  # version header
     print(read_line(), flush=True)  # start of infinite array
     while True:
-        prefix, line = LINE_RE.match(read_line()).groups()
+        prefix, fields = read_json_line()
+        fields.extend(get_status())
 
-        fields = json.loads(line)
-
-        value = is_listening()
-        fields.append(OUTPUTS[value])
-
-        set_led(value)
-
-        print(prefix + json.dumps(fields), flush=True)
+        print(prefix, end='')
+        print(json.dumps(fields), flush=True)
 
 
 if __name__ == '__main__':
