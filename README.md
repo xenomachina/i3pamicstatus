@@ -8,10 +8,12 @@ aka "i3 PulseAudio Microphone Status"
 [`i3status`](https://i3wm.org/docs/i3status.html) decorator that displays the
 PulseAudio microphone status.
 
-It displays a
-[microphone](https://fontawesome.com/icons/microphone?s=solid&f=classic)
-if any microphones are listening, otherwise it displays
-[microphone-slash](https://fontawesome.com/icons/microphone-slash?s=solid&f=classic).
+It displays a green 
+[microphone icon](https://fontawesome.com/icons/microphone?s=solid&f=classic)
+if any microphones are listening, otherwise it displays a gray
+[microphone-slash icon](https://fontawesome.com/icons/microphone-slash?s=solid&f=classic).
+
+![screen recording](status-bar.gif)
 
 This requires that the consumer of your `i3status` (eg: `i3bar`) is using Font
 Awesome or a compatible font.
