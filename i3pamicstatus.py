@@ -25,8 +25,22 @@ import sys
 try:
     from usb import USBError
     from blinkstick import blinkstick
+
+    def set_led(value):
+        try:
+            light = blinkstick.find_first()
+            if light:
+                light.set_color(hex=LED_COLORS[value])
+        except (AttributeError, USBError):
+            # Sometimes blinkstick throws one of these exceptions if the
+            # device is removed while we are interacting with it, so we
+            # silently ignore them.
+            pass
+
 except ModuleNotFoundError:
-    blinkstick = None
+    # make set_led a no-op if we can't import blinkstick module
+    def set_led(value):
+        pass
 
 
 pulse = pulsectl.Pulse('i3pamicstatus')
@@ -87,16 +101,7 @@ def main():
         value = is_listening()
         fields.append(OUTPUTS[value])
 
-        if blinkstick:
-            try:
-                light = blinkstick.find_first()
-                if light:
-                    light.set_color(hex=LED_COLORS[value])
-            except (AttributeError, USBError):
-                # Sometimes blinkstick throws one of these exceptions if the
-                # device is removed while we are interacting with it, so we
-                # silently ignore them.
-                pass
+        set_led(value)
 
         print(prefix + json.dumps(fields), flush=True)
 
