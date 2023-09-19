@@ -53,9 +53,10 @@ def is_listening():
 def is_unmute():
     default_source_name = pulse.server_info().default_source_name
     default_source_idx = -1
-    for source in pulse.source_list():
+    for source_id in range(0, len(pulse.source_list())):
+        source = pulse.source_list()[source_id]
         if source.name == default_source_name:
-            default_source_idx = source.index
+            default_source_idx = source_id
             break
     if default_source_idx < 0:
         return False
