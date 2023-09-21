@@ -50,6 +50,18 @@ def is_listening():
     return any(x.state == pulsectl.pulsectl.PulseStateEnum.running
                for x in pulse.source_list())
 
+def is_unmute():
+    default_source_name = pulse.server_info().default_source_name
+    default_source_idx = -1
+    for source_id in range(0, len(pulse.source_list())):
+        source = pulse.source_list()[source_id]
+        if source.name == default_source_name:
+            default_source_idx = source_id
+            break
+    if default_source_idx < 0:
+        return False
+    return pulse.source_list()[default_source_idx].mute == 0
+
 
 # See https://i3wm.org/docs/i3bar-protocol.html
 OUTPUTS = {
@@ -75,8 +87,28 @@ LED_COLORS = {
     True: "#003300",
 }
 
+class cmdline_arguments:
+    """
+    Class to parse command line arguments and set the corresponding options.
+    Arguments to parse:
 
-def get_status():
+    --show-muted    show whether the microphone is muted or not instead of listening
+
+    Also this class stores options that could be used to change the behavior
+    of the program.
+    """
+    options = {
+        "show-muted": False, # show when mic muted/unmuted
+    }
+    def __init__(self):
+        if len(sys.argv) <= 1:
+            return
+        for arg in sys.argv[1:]:
+            opt = arg[2:]
+            if opt in self.options:
+                self.options[opt] = True
+
+def get_status(cl_args):
     """
     Returns the current status
 
@@ -85,7 +117,10 @@ def get_status():
 
     Other side effects based on the status should also be performed here.
     """
-    value = is_listening()
+    if cl_args.options['show-muted']:
+        value = is_unmute()
+    else:
+        value = is_listening()
     set_led(value)
     return [OUTPUTS[value]]
 
@@ -116,13 +151,16 @@ def read_json_line():
     fields = json.loads(line)
     return prefix, fields
 
-
 def main():
+    # Process the command line arguments
+    cl_args = cmdline_arguments()
+
+    # Read i3status output
     print(read_line(), flush=True)  # version header
     print(read_line(), flush=True)  # start of infinite array
     while True:
         prefix, fields = read_json_line()
-        fields.extend(get_status())
+        fields.extend(get_status(cl_args))
 
         print(prefix, end='')
         print(json.dumps(fields), flush=True)
