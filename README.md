@@ -35,7 +35,7 @@ device found will be used, and will light up when a microphone is active.
 i3pamicstatus is tolerant of the BlinkStick device appearing or disappearing
 while it's running.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/D7ecg1Aq54k?si=AM_VgcpsAT_O_wLN" title="i3pamicstatus BlinkStick Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![i3pamicstatus BlinkStick Demo](https://img.youtube.com/vi/D7ecg1Aq54k/0.jpg)](https://www.youtube.com/watch?v=D7ecg1Aq54k)
 
 ## Why does this exist?
 
