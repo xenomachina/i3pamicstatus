@@ -51,11 +51,17 @@ except ModuleNotFoundError:
 
 
 pulse = pulsectl.Pulse('i3pamicstatus')
+PA_INVALID_INDEX = 0xffffffff
 
 
 def is_listening():
-    return any(x.state == pulsectl.pulsectl.PulseStateEnum.running
-               for x in pulse.source_list())
+    return any(
+        x.state == pulsectl.pulsectl.PulseStateEnum.running
+        # Some sources are monitors of sinks, so filter those out. If we don't,
+        # this will activate when producing output on any monitored sink.
+        and x.monitor_of_sink == PA_INVALID_INDEX
+        for x in pulse.source_list()
+    )
 
 
 # See https://i3wm.org/docs/i3bar-protocol.html
