@@ -1,5 +1,12 @@
-#!/usr/bin/python3
+#!/usr/bin/env -S uv run
 # -*- coding: utf-8 -*-
+# /// script
+# dependencies = [
+#   "pyusb==1.2.1",
+#   "pulsectl==24.12.0",
+# ]
+# ///
+#
 #
 # Copyright ©2022 Laurence Gonsalves
 # All rights reserved.
